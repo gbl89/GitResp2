@@ -8,12 +8,22 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="01-placeorder" />
+        <module name="03-ordermanage" />
+        <module name="04-coupon" />
+        <module name="06-business" />
+        <module name="02-itemstock" />
+        <module name="05-userpoints" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="01-placeorder" options="-parameters" />
+      <module name="02-itemstock" options="-parameters" />
+      <module name="03-ordermanage" options="-parameters" />
+      <module name="04-coupon" options="-parameters" />
+      <module name="05-userpoints" options="-parameters" />
+      <module name="06-business" options="-parameters" />
     </option>
   </component>
 </project>
