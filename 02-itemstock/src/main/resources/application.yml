@@ -1,8 +1,8 @@
 server:
-  port: 01
+  port: 02
 spring:
   application:
-    name: placeorder
+    name: itemstock
   cloud:
     nacos:
       discovery:

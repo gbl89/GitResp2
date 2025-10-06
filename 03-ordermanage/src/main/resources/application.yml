@@ -1,8 +1,8 @@
 server:
-  port: 01
+  port: 03
 spring:
   application:
-    name: placeorder
+    name: ordermanage
   cloud:
     nacos:
       discovery:
