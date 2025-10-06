@@ -1,6 +1,8 @@
 package com.mashibing.controller;
 
 import com.mashibing.client.*;
+import com.mashibing.config.RabbitMQConfig;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,12 +14,14 @@ public class PlaceOrderController {
     private ItemStockClient itemStockClient;
     @Autowired
     private OrderManageClient orderManageClient;
-    @Autowired
+/*    @Autowired
     private CouponClient couponClient;
     @Autowired
     private UserPointsClient userPointsClient;
     @Autowired
-    private BusinessClient businessClient;
+    private BusinessClient businessClient;*/
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     /*
     * 模拟用户下单操作
@@ -29,12 +33,16 @@ public class PlaceOrderController {
         itemStockClient.decr();
         //2.调用订单服务，创建订单
         orderManageClient.create();
-        //3.调用优惠价服务，预扣除使用的优惠劵
+        //注释之前 该为异步调用
+/*        //3.调用优惠价服务，预扣除使用的优惠劵
         couponClient.coupon();
         //4.调用用户积分服务，预扣除用户使用的积分
         userPointsClient.up();
         //5.调用商家服务，通知商家用户已经下单
-        businessClient.notifyBusiness();
+        businessClient.notifyBusiness();*/
+       //异步方式的使用
+        String userAndOrderInfo="用户信息&订单信息&优惠劵信息等等.";
+        rabbitTemplate.convertAndSend(RabbitMQConfig.PLACE_ORDER_EXCHANGE,"",userAndOrderInfo);
         long end =System.currentTimeMillis();
         System.out.println("使用的时长为"+(end-start));
         return "place order is ok!";
