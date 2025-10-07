@@ -2,10 +2,17 @@ package com.mashibing.controller;
 
 import com.mashibing.client.*;
 import com.mashibing.config.RabbitMQConfig;
+import com.mashibing.util.GlobalCache;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 public class PlaceOrderController {
@@ -42,7 +49,16 @@ public class PlaceOrderController {
         businessClient.notifyBusiness();*/
        //异步方式的使用
         String userAndOrderInfo="用户信息&订单信息&优惠劵信息等等.";
-        rabbitTemplate.convertAndSend(RabbitMQConfig.PLACE_ORDER_EXCHANGE,"",userAndOrderInfo);
+        //绑定全局的 确保confirm机制
+        String id = UUID.randomUUID().toString();
+        Map map= new HashMap<>();
+        map.put("id",id);
+        map.put("message",userAndOrderInfo);
+        map.put("exchange",RabbitMQConfig.PLACE_ORDER_EXCHANGE);
+        map.put("routingKey","");
+        map.put("sendTime",new Date());
+        GlobalCache.set(id,map);
+        rabbitTemplate.convertAndSend(RabbitMQConfig.PLACE_ORDER_EXCHANGE,"",userAndOrderInfo,new CorrelationData(id));
         long end =System.currentTimeMillis();
         System.out.println("使用的时长为"+(end-start));
         return "place order is ok!";

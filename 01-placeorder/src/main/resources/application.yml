@@ -13,3 +13,11 @@ spring:
     username: guest
     password: guest
     virtual-host: /
+    publisher-confirm-type: correlated #开启confirm机制  保证消息发送到交换机上面
+    publisher-returns: true #开启return 机制  保证交换机的内容发送到消息队列上面
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/rabbitmq_test?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    username: root
+    password: root
